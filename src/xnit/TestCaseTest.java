@@ -5,11 +5,23 @@ public class TestCaseTest extends TestCase {
         super(name);
     }
 
-    public void testRunning () {
+    WasRun wasRun;
+
+    @Override
+    public void setUp() {
         WasRun wasRun = new WasRun("testMethod");
+    }
+
+    public void testRunning () { //테스트
         Assert.assertEquals(false, wasRun.wasRun);
-        wasRun.run();
+        wasRun.run();//wasRun true로 변환
         Assert.assertEquals(true, wasRun.wasRun);
+    }
+
+    public void testSetup() {
+        Assert.assertEquals(false, wasRun.wasSetUp);
+        wasRun.run();//wasSetUp true로 변환
+        Assert.assertEquals(true, wasRun.wasSetUp);
     }
 
 }
