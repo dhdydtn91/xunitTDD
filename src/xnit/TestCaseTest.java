@@ -1,27 +1,50 @@
 package xnit;
 
 public class TestCaseTest extends TestCase {
+
     public TestCaseTest(String name) {
         super(name);
     }
 
-    WasRun wasRun;
+    public static TestSuite suite(){
+        return new TestSuite(TestCaseTest.class);
+    }
 
-    @Override
-    public void setUp() {
+    public void testTemplateMethod() {
         WasRun wasRun = new WasRun("testMethod");
+        TestResult result = new TestResult();
+        wasRun.run(result);
+        Assert.assertEquals("setUp testMethod tearDown", wasRun.log);
     }
 
-    public void testRunning () { //테스트
-        Assert.assertEquals(false, wasRun.wasRun);
-        wasRun.run();//wasRun true로 변환
-        Assert.assertEquals(true, wasRun.wasRun);
+    public void testResult() {
+        WasRun wasRun = new WasRun("testMethod");
+        TestResult result = new TestResult();
+        wasRun.run(result);
+        Assert.assertEquals("1 run 0 failed", result.getSummary());
     }
 
-    public void testSetup() {
-        Assert.assertEquals(false, wasRun.wasSetUp);
-        wasRun.run();//wasSetUp true로 변환
-        Assert.assertEquals(true, wasRun.wasSetUp);
+    public void testFailedResultFormatting() {
+        TestResult result = new TestResult();
+        result.testStarted();
+        result.testFailed();
+        Assert.assertEquals("1 run 1 failed", result.getSummary());
     }
 
+    public void testFailedResult() {
+        WasRun wasRun = new WasRun("testBrokenMethod");
+        TestResult result = new TestResult();
+        wasRun.run(result);
+        Assert.assertEquals("1 run 1 failed", result.getSummary());
+    }
+
+    public void testSuite() {
+        TestSuite suite = new TestSuite();
+        suite.add(new WasRun("testMethod"));
+        suite.add(new WasRun("testBrokenMethod"));
+        TestResult result = new TestResult();
+        suite.run(result);
+        Assert.assertEquals("2 run 1 failed", result.getSummary());
+
+    }
 }
